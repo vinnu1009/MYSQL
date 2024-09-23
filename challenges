@@ -1,0 +1,59 @@
+select * from users;
+
+-- project challanges
+
+-- finding 5 oldest users
+
+select username,created_at
+from users
+order by created_at asc limit 5;
+
+-- latest 5 users
+
+select username,created_at
+from users
+order by created_at asc limit 5;
+
+select username,created_at
+from users
+order by created_at desc limit 5;
+
+-- on which a how many members are created
+
+select dayname(created_at) as Day_of_the_week,count(*) as total_count
+from users
+group by dayname(created_at)
+order by total_count desc;
+
+-- find a user who have never posted a photo
+select users.id,username,users.created_at as user_joining_date
+from users
+left join photos
+on users.id = photos.user_id
+where photos.user_id is null;
+-- who can get most likes on a single photo.alter
+select users.id as user_id,
+username,
+photos.id as photo_id,
+photos.image_url,
+count(*) as total_likes_count
+from photos
+join likes
+on photos.id = likes.photo_id
+join users
+on users.id = photos.user_id
+group by photos.id
+order by total_likes_count
+desc
+limit 1;
+
+-- what are the top 5 commonly used hash tags
+select tags.id as tag_id,
+tags.tag_name,
+count(*) as total_tags_count
+from tags 
+join photo_tags
+on tags.id = photo_tags.tag_id
+group by tags.id
+order by total_tags_count desc
+limit 5;
